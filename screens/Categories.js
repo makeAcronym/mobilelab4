@@ -20,6 +20,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5.js';
 
 
 export default function Categories(){
+    const navigation =useNavigation();
     const images = [
         require("../assets/device.png"),
         require("../assets/diamond.png"),
@@ -124,6 +125,19 @@ export default function Categories(){
                 width: "45%",
               }}
             >
+              <Pressable
+               onPress={()=>navigation.navigate('Product Details'
+                , {
+
+                    title: item.title,
+                    price: item?.price,
+                    rating: item.rating,
+                    description: item?.description,
+                    image: item?.image,
+                    
+
+               })}
+              >  
               <Image
                 style={styles.imageThumbnail}
                 source={{ uri: item.image }}
@@ -132,6 +146,7 @@ export default function Categories(){
               <Text style={styles.itemTitle}>{item.title.length > 38
                     ? item.title.slice(0, 38)
                     : item.title}</Text>
+                  </Pressable>
               <View
                 style={{
                     flexDirection:"row",

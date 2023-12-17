@@ -9,6 +9,8 @@ import IonIcon from 'react-native-vector-icons/Ionicons.js';
 import Home from "./Home.js";
 import { useNavigation } from "@react-navigation/native";
 import HomeStack from "../navigations/HomeStack.js";
+import CategoriesStack from "../navigations/CategoriesStack.js";
+import ProfileStack from "../navigations/ProfileStack.js";
 
 
 const Bottom = createBottomTabNavigator();
@@ -50,8 +52,8 @@ export default function HomeBottom(){
             />
             <Bottom.Screen
                 name="Categories"
-                component={Categories}
-                options={{headerShown: true}}
+                component={CategoriesStack}
+                options={{headerShown: false}}
             />
             <Bottom.Screen
                 name="Cart"
@@ -60,8 +62,8 @@ export default function HomeBottom(){
             />
             <Bottom.Screen
                 name="Profile"
-                component={Profile}
-                options={{headerShown: true}}
+                component={ProfileStack}
+                options={{headerShown: false}}
                 
             />
         </Bottom.Navigator>

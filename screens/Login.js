@@ -1,6 +1,6 @@
 // Họ tên: Ngô Võ Quang Minh
 // MSSV: 21521129
-import React from "react";
+import React, {useEffect} from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "./AuthContext";
 import { useContext } from "react";
@@ -18,10 +18,13 @@ import {
 } from "react-native";
 import IonIcon from "react-native-vector-icons/Ionicons.js";
 import Logo from "../components/Logo";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 export default function Login() {
   const navigation = useNavigation();
   const {
+    userId,
+    setUserId,
     email,
     setEmail,
     password,
@@ -29,12 +32,40 @@ export default function Login() {
     isAuthenticated,
     setIsAuthenticated,
   } = useContext(AuthContext);
-  const handleLogin = () => {
-    if (email === "21521129@gm.uit.edu.vn" && password === "ngovoquangminh") {
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const token = await AsyncStorage.getItem("authToken");
+
+        if (token) {
+          setIsAuthenticated(true);
+        }
+      } catch (err) {
+        console.log("error message", err);
+      }
+    };
+    checkLoginStatus();
+  }, []);
+  const handleLogin = async () => {
+    try {
+    const response = await axios.get("https://fakestoreapi.com/users");
+    const users = response.data;
+    // Tìm người dùng trong danh sách
+    const user = users.find((user) => user.email === email && user.password === password);
+    if (user) {
+      const token = user.token;
+      AsyncStorage.setItem("authToken", token);
+      setUserId(user.id);
       setIsAuthenticated(true);
+      console.log("Authentication successful!");
     } else {
-      Alert.alert("Warning", "Incorrect email or password");
+      // Xác thực không thành công
+      console.log("Invalid email or password");
+      Alert.alert("Login Error", "Invalid Email or Password");
     }
+  } catch (error) {
+    console.log("Error retrieving user data:", error);
+  }
   };
   const handleOnPressSignUp = () => {
     navigation.navigate("SignUp");

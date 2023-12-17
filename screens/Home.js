@@ -17,8 +17,12 @@ import { useNavigation } from "@react-navigation/native";
 import Carousel from "react-native-reanimated-carousel";
 import axios from "axios";
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5.js';
+import { AuthContext } from "./AuthContext";
+import jwt_decode from "jwt-decode";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Home() {
+  const { userId, setUserId } = useContext(AuthContext);
   const navigation = useNavigation();
   const [hotDeals, setHotDeals] = useState([]);
   const [newArrivals, setNewArrivals] =useState([]);
@@ -53,6 +57,15 @@ export default function Home() {
   };
   useEffect(() => {
     fetchProducts();
+  }, []);
+  const fetchUser = async () => {
+    const token = await AsyncStorage.getItem("authToken");
+    const decodedToken = jwt_decode(token);
+    const userId = decodedToken.userId;
+    setUserId(userId);
+  };
+  useEffect(() => {
+    fetchUser();
   }, []);
   return (
     <SafeAreaView style={styles.container}>
@@ -94,6 +107,19 @@ export default function Home() {
                 width: "45%",
               }}
             >
+              <Pressable
+               onPress={()=>navigation.navigate('Product Details'
+                , {
+
+                    title: item.title,
+                    price: item?.price,
+                    rating: item.rating,
+                    description: item?.description,
+                    image: item?.image,
+                    
+
+               })}
+              >  
               <Image
                 style={styles.imageThumbnail}
                 source={{ uri: item.image }}
@@ -102,6 +128,7 @@ export default function Home() {
               <Text style={styles.itemTitle}>{item.title.length > 38
                     ? item.title.slice(0, 38)
                     : item.title}</Text>
+              </Pressable>
               <View
                 style={{
                     flexDirection:"row",
