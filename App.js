@@ -1,12 +1,16 @@
-import { StatusBar } from 'expo-status-bar';
+// Họ tên: Ngô Võ Quang Minh
+// MSSV: 21521129
+import 'react-native-gesture-handler';
 import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { AuthProvider } from './screens/AuthContext.js';
+import AppNavigator from './AppNavigator.js';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <AuthProvider>
+      <AppNavigator/>
+    </AuthProvider>
   );
 }
 
